@@ -1,0 +1,103 @@
+window.onload=function(){
+	(function(){
+		var banner=document.getElementsByClassName('banner'),
+		    item=document.getElementsByClassName('item'),
+		    button1=document.getElementById('button1'),
+		    button2=document.getElementById('button2'),
+		    index=0,preB=banner[0],preI=item[0],timerId,time=3000,kaiguan1,kaiguan2;
+		banner[0].style.display='block';
+		item[0].style.background='#ccc';
+		var lunbo=function(){
+			index++;
+			if(index==banner.length){
+				index=0;
+			}
+			preB.style.display='none';
+			banner[index].style.display='block';
+			preB=banner[index];
+			preI.style.background='#606060';
+			item[index].style.background='#ccc';
+			preI=item[index];
+		};
+		timerId=setInterval(lunbo,time);
+		for(var i=0;i<banner.length;i++){
+			item[i].index=i;
+			banner[i].onmouseover=function(){
+				clearInterval(timerId);
+			};
+			banner[i].onmouseout=function(){
+				if(!kaiguan2){
+					clearInterval(timerId);
+					timerId=setInterval(lunbo,time);
+				}			
+			};
+			item[i].onmouseover=function(){
+				this.style.background='#ccc';
+			};
+			item[i].onmouseout=function(){
+				if(!kaiguan1){
+					this.style.background='#606060';
+				}else{
+					this.style.background='#ccc';
+					kaiguan1=false;
+					preI=this;
+				}
+			};
+			item[i].onclick=function(){
+				clearInterval(timerId);
+				kaiguan1=true;
+				kaiguan2=true;
+				preI.style.background='#606060';
+				this.style.background='#ccc';
+				preB.style.display='none';
+				banner[this.index].style.display='block';
+				preB=banner[this.index];
+				preI=this;
+				index=this.index;
+			};
+		}
+		button1.onclick=function(){
+			clearInterval(timerId);
+			kaiguan2=true;
+			preB.style.display='none';
+			preI.style.background='#606060';
+			index--;
+			if(index<0){
+				index=banner.length-1;
+			}
+			banner[index].style.display='block';
+			item[index].style.background='#ccc';
+			preB=banner[index];
+			preI=item[index];
+		};
+		button2.onclick=function(){
+			clearInterval(timerId);
+			kaiguan2=true;
+			preB.style.display='none';
+			preI.style.background='#606060';
+			index++;
+			if(index==banner.length){
+				index=0;
+			}
+			banner[index].style.display='block';
+			item[index].style.background='#ccc';
+			preB=banner[index];
+			preI=item[index];
+		};
+		document.onmousedown=function(e){
+			e.preventDefault();
+		};
+	})();
+
+	// 闭包的小练习
+	document.onclick=(function(){
+		var i=0;
+		return function(a){
+			if(i==3){
+				return;
+			}
+			console.log(1);
+			i++;
+		}
+	})();
+};
